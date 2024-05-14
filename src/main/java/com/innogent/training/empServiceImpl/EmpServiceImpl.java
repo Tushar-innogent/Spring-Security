@@ -13,10 +13,16 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.innogent.training.IService.IEmpService;
+import com.innogent.training.entity.City;
+import com.innogent.training.entity.Country;
 import com.innogent.training.entity.Employee;
+import com.innogent.training.entity.States;
 import com.innogent.training.mapper.EmpMapper;
 import com.innogent.training.model.EmployeeModel;
+import com.innogent.training.repository.CityRepo;
+import com.innogent.training.repository.CountryRepo;
 import com.innogent.training.repository.EmpRepo;
+import com.innogent.training.repository.StatesRepo;
 
 @Service
 public class EmpServiceImpl implements IEmpService {
@@ -26,6 +32,15 @@ public class EmpServiceImpl implements IEmpService {
 
 	@Autowired
 	private EmpMapper mapper;
+
+	@Autowired
+	private CityRepo cityRepo;
+
+	@Autowired
+	private StatesRepo stateRepo;
+
+	@Autowired
+	private CountryRepo countryRepo;
 
 	@Override
 	public EmployeeModel getEmp(Long id) {
@@ -141,6 +156,40 @@ public class EmpServiceImpl implements IEmpService {
 	public Map<String, Double> getEmpSalByAddress() {
 		List<Object[]> o = repo.getEmpSalGroupByAddress();
 		return o.stream().collect(Collectors.toMap(a -> (String) a[0], a -> Double.valueOf(a[1] + "")));
+	}
+
+	@Override
+	public Employee addEmpDetails(Employee emp) {
+		String existingCityName = emp.getAddress().getCity().getCityName();
+		City existingCity = cityRepo.findByCityName(existingCityName);
+
+		String existingStateName = emp.getAddress().getCity().getState().getStateName();
+		States existingState = stateRepo.findByStateName(existingStateName);
+
+		String existingCountryName = emp.getAddress().getCity().getState().getCountry().getCountryName();
+		Country existingCountry = countryRepo.findByCountryName(existingCountryName);
+
+		if (existingCity == null) {
+			if (existingState == null) {
+				if (existingCountry == null) {
+					return repo.save(emp);
+				}
+				emp.getAddress().getCity().getState().setCountry(existingCountry);
+				return repo.save(emp);
+			}
+			emp.getAddress().getCity().setState(existingState);
+			return repo.save(emp);
+		}
+		emp.getAddress().setCity(existingCity);
+		return repo.save(emp);
+	}
+
+	@Override
+	public Employee getEmpDetailsById(Long id) {
+		Employee e = repo.findById(id).get();
+//		if (e != null)
+//			return mapper.entityToModel(e);
+		return e;
 	}
 
 }

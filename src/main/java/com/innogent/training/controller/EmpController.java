@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.innogent.training.IService.IEmpService;
+import com.innogent.training.entity.Employee;
 import com.innogent.training.model.EmployeeModel;
 
 @CrossOrigin
 @RestController
+
 public class EmpController {
 	@Autowired
 	private IEmpService service;
@@ -165,6 +167,25 @@ public class EmpController {
 	public ResponseEntity<?> getEmpSalGroupAddress() {
 		Map<String, Double> empMap = service.getEmpSalByAddress();
 		return ResponseEntity.status(HttpStatus.FOUND).body(empMap);
+	}
+
+	@PostMapping("/addAllDetails")
+	public ResponseEntity<?> addEmpDetails(@RequestBody Employee e) {
+		Employee emp = service.addEmpDetails(e);
+		return ResponseEntity.status(HttpStatus.FOUND).body(e);
+	}
+
+	@GetMapping("/id/{id}")
+	public ResponseEntity<?> getEmployeeDetailsById(@PathVariable Long id) {
+//		EmployeeModel e = service.getEmpById(id);
+//		if (e != null) {
+//			return ResponseEntity.status(HttpStatus.FOUND).body(e);
+//		} else {
+//			return ResponseEntity.notFound().build();
+//		}
+		Employee e = service.getEmpDetailsById(id);
+		return ResponseEntity.status(HttpStatus.FOUND).body(e);
+
 	}
 
 }

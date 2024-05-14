@@ -3,6 +3,7 @@ package com.innogent.training.IService;
 import java.util.List;
 import java.util.Map;
 
+import com.innogent.training.entity.Employee;
 import com.innogent.training.model.EmployeeModel;
 
 public interface IEmpService {
@@ -39,5 +40,9 @@ public interface IEmpService {
 	public Map<String, Integer> getEmpCountByAddress();
 
 	public Map<String, Double> getEmpSalByAddress();
+
+	public Employee addEmpDetails(Employee emp);
+
+	public Employee getEmpDetailsById(Long id);
 
 }

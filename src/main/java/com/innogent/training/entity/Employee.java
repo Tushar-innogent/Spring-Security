@@ -1,23 +1,25 @@
 package com.innogent.training.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table
+@Table(name = "JPA_Employee")
 @Getter
 @Setter
 public class Employee {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "emp_gen")
-	@SequenceGenerator(name = "emp_gen", sequenceName = "employee_seq", initialValue = 1001, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long empId;
 
 	@Column
@@ -29,6 +31,8 @@ public class Employee {
 	@Column
 	private Double sal;
 
-	@Column
-	private String address;
+	@OneToOne(targetEntity = Address.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id", referencedColumnName = "addressId")
+//	@JsonIgnore
+	private Address address;
 }
