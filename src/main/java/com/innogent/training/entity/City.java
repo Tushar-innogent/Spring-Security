@@ -1,4 +1,3 @@
-
 package com.innogent.training.entity;
 
 import jakarta.persistence.CascadeType;
@@ -9,32 +8,25 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "JPA_Employee")
+@Table
 @Getter
 @Setter
-public class Employee {
+public class City {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long empId;
+	private Integer cityId;
 
-	@Column
-	private String empName;
+	@Column(length = 50)
+	private String cityName;
 
-	@Column
-	private String job;
-
-	@Column
-	private Double sal;
-
-	@OneToOne(targetEntity = Address.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id", referencedColumnName = "addressId")
-//	@JsonIgnore
-	private Address address;
-
+	@ManyToOne(targetEntity = States.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "stateId", referencedColumnName = "stateId")
+	private States state;
 }

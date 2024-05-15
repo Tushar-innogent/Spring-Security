@@ -1,4 +1,3 @@
-
 package com.innogent.training.entity;
 
 import jakarta.persistence.CascadeType;
@@ -36,5 +35,4 @@ public class Employee {
 	@JoinColumn(name = "address_id", referencedColumnName = "addressId")
 //	@JsonIgnore
 	private Address address;
-
 }

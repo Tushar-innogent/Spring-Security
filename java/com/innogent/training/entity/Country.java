@@ -1,4 +1,3 @@
-
 package com.innogent.training.entity;
 
 import java.io.Serializable;

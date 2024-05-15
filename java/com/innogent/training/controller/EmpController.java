@@ -21,6 +21,7 @@ import com.innogent.training.model.EmployeeModel;
 
 @CrossOrigin
 @RestController
+
 public class EmpController {
 	@Autowired
 	private IEmpService service;
