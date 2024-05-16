@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.innogent.training.IService.IEmpService;
@@ -48,10 +49,35 @@ public class EmpServiceImpl implements IEmpService {
 	}
 
 	@Override
-	public EmployeeModel addEmp(EmployeeModel employee) {
-		Employee empEntity = mapper.modelToEntity(employee);
-		Employee empResult = repo.save(empEntity);
-		return mapper.entityToModel(empResult);
+	public EmployeeModel addEmp(Employee emp) {
+//		Employee empEntity = mapper.modelToEntity(employee);
+//		Employee empResult = repo.save(empEntity);
+//		return mapper.entityToModel(empResult);
+		emp.setPassword(new BCryptPasswordEncoder().encode(emp.getPassword()));
+		emp.setRole("ROLE_EMPLOYEE");
+		
+		String existingCityName = emp.getAddress().getCity().getCityName();
+		City existingCity = cityRepo.findByCityName(existingCityName);
+
+		String existingStateName = emp.getAddress().getCity().getState().getStateName();
+		States existingState = stateRepo.findByStateName(existingStateName);
+
+		String existingCountryName = emp.getAddress().getCity().getState().getCountry().getCountryName();
+		Country existingCountry = countryRepo.findByCountryName(existingCountryName);
+
+		if (existingCity == null) {
+			if (existingState == null) {
+				if (existingCountry == null) {
+					return mapper.entityToModel(repo.save(emp));
+				}
+				emp.getAddress().getCity().getState().setCountry(existingCountry);
+				return mapper.entityToModel(repo.save(emp));
+			}
+			emp.getAddress().getCity().setState(existingState);
+			return mapper.entityToModel(repo.save(emp));
+		}
+		emp.getAddress().setCity(existingCity);
+		return mapper.entityToModel(repo.save(emp));
 	}
 
 	@Override
@@ -71,8 +97,8 @@ public class EmpServiceImpl implements IEmpService {
 	}
 
 	@Override
-	public List<EmployeeModel> getAllEmp() {
-		return mapper.entityToModel(repo.findAll());
+	public List<Employee> getAllEmp() {
+		return repo.findAll();
 	}
 
 	@Override
@@ -103,7 +129,7 @@ public class EmpServiceImpl implements IEmpService {
 
 	@Override
 	public EmployeeModel getEmpByName(String name) {
-		return mapper.entityToModel(repo.findByEmpName(name));
+		return mapper.entityToModel(repo.findByEmpName(name).get());
 	}
 
 	@Override
@@ -160,6 +186,10 @@ public class EmpServiceImpl implements IEmpService {
 
 	@Override
 	public Employee addEmpDetails(Employee emp) {
+		
+		emp.setPassword(new BCryptPasswordEncoder().encode(emp.getPassword()));
+		emp.setRole("ROLE_EMPLOYEE");
+		
 		String existingCityName = emp.getAddress().getCity().getCityName();
 		City existingCity = cityRepo.findByCityName(existingCityName);
 

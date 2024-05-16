@@ -1,6 +1,7 @@
 package com.innogent.training.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import com.innogent.training.entity.Employee;
 
 public interface EmpRepo extends JpaRepository<Employee, Long> {
 
-	public Employee findByEmpName(String empName);
+	public Optional<Employee> findByEmpName(String empName);
 
 	public List<Employee> findBySalGreaterThan(Double sal);
 

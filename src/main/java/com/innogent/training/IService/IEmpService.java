@@ -9,13 +9,13 @@ import com.innogent.training.model.EmployeeModel;
 public interface IEmpService {
 	public EmployeeModel getEmp(Long id);
 
-	public EmployeeModel addEmp(EmployeeModel emp);
+	public EmployeeModel addEmp(Employee emp);
 
 	public EmployeeModel updateEmp(Long id, EmployeeModel emp);
 
 	public String deleteEmp(Long id);
 
-	public List<EmployeeModel> getAllEmp();
+	public List<Employee> getAllEmp();
 
 	public EmployeeModel getEmpById(Long id);
 
